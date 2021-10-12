@@ -1,0 +1,62 @@
+Configurando nome de hosts
+---------------------------
+    O utilitário hostnamectl permite administrar as três classes separadas de hostnames (pretty, static e transient) em uso no sistema.
+
+    - O hostname estático é o tradicional, usado por padrão para inicializar o hostname do kernel durante o boot do sistema, e pode ter no máximo 64 caracteres. Pode ser escolhido pelo usuário e é armazenado no arquivo /etc/hostname.
+
+    - O hostname “pretty”, de alto nível, é mais descritivo e permite incluir todos os tipos de caracteres especiais. É armazenado no arquivo /etc/machine-info´, que é criado quando o hostname pretty é configurado pela primeira vez. É usado para apresentação ao usuário.
+
+    - O hostname transiente é um hostname dinâmico, mantido pelo kernel, e se trata de um valor recebido via configuração de rede, por DHCP ou mDNS (multicast DNS), e também pode ter no máximo 64 caracteres. Se o hostname estático for configurado e válido (não “localhost”), então o hostname transiente não será usado.
+
+    Sintaxe:
+    --------
+        hostnamectl opções comando
+
+    Exemplos:
+    ----------
+        Visualizar todos os nomes de host atuais:
+
+            - hostnamectl status
+
+        Configurar todos os hostnames em um sistema de uma vez para “boson”:
+
+            - hostnamectl set-hostname "Bóson Treinamentos" --pretty
+
+        Limpar um hostname em particular e reverter para o padrão:
+
+            - hostnamectl set-hostname ""
+
+        Onde “” é uma string vazia entre aspas e a opção é zero ou mais entre –pretty, –static, e –transient.  Se nenhuma opção for fornecida, todos as classes de hostname voltarão ao padrão. Por exemplo, vamos reverter todos os hostnames para o padrão:
+
+            - hostnamectl set-hostname ""
+
+
+Editando arquivos hosts
+-------------------------
+    - /etc/hosts:
+    --------------
+        Contém mapeamentos simples entre endereços IPs e nomes e pode ser usado para resolução de nomes.
+
+            |---------------------------------------------------------------------|
+            | IP do host   | Nome totalmente qualificado (FQDN) | Apelido (Alias) |
+            |---------------------------------------------------------------------|
+            | 127.0.0.1    |       localhost.localdomain        |  localhost      |
+            |---------------------------------------------------------------------|
+            | 172.168.0.1  |       maquina.dominio.local        |  maquina        |
+            |---------------------------------------------------------------------|
+
+    - /etc/resolv.conf
+    -------------------
+        Contém uma listagem de servidores DNS que podem ser consultados para resolução de nomes
+
+    - /etc/nsswitch
+    -----------------
+        Determina a ordem de busca quando determinadas informações são requisitadas, tais como a resolução de nomes, arquivos de senhas e de grupos (somente para serviços de diretórios NIS)
+		
+
+
+
+Fonte:
+-------
+    http://www.bosontreinamentos.com.br/linux/fedora/configurando-hostnames-com-utilitario-hostnamectl-no-fedora-linux/
+    https://www.youtube.com/watch?v=rUKSz_hxCjA
