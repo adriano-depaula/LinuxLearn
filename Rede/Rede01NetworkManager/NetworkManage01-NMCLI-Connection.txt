@@ -1,0 +1,103 @@
+Gerenciador de interface de rede NetworkManager
+------------------------------------------------
+
+    nmcli é uma ferramenta de linha de comando para controlar o NetworkManager e relatar o status da rede. Ele pode ser utilizado como um substituto para nm-applet ou outros clientes gráficos. nmcli é usado para criar, exibir, editar, excluir, ativar e desativar conexões de rede, bem como controlar e exibir o status do dispositivo de rede.
+
+    Os usos típicos incluem:
+
+        - Scripts: Utilize o NetworkManager via nmcli em vez de gerenciar as conexões de rede manualmente. nmcli suporta um formato de saída conciso que é mais adequado para processamento de script. Observe que o NetworkManager também pode executar scripts, chamados de "scripts de despachante", em resposta a eventos de rede.
+
+        - Servidores, máquinas sem comando e terminais: nmcli pode ser usado para controlar o NetworkManager sem uma GUI, incluindo a criação, edição, início e interrupção de conexões de rede e visualização do status da rede.
+
+
+    Exemplos NetworkManager CLI
+    ----------------------------
+        - man nmcli-examples   
+
+    nmcli connection { show | up | down | modify | add | edit | clone | delete | monitor | reload | load | import | export } [ARGUMENTS...]
+    -----------------------------------------------------------------------------------------------------------------------------------------
+
+        O NetworkManager armazena todas as configurações de rede como "conexões", que são coleções de dados (detalhes da Camada 2, endereçamento IP, etc.) que descrevem como criar ou se conectar a uma rede. Uma conexão é "ativa" quando um dispositivo usa a configuração dessa conexão para criar ou se conectar a uma rede. Pode haver várias conexões que se aplicam a um dispositivo, mas apenas uma delas pode estar ativa naquele dispositivo a qualquer momento. As conexões adicionais podem ser usadas para permitir a comutação rápida entre diferentes redes e configurações.
+
+        Exibir status da conexões das interfaces de rede
+        --------------------------------------------------
+            - nmcli connection show
+
+        Exibe endereços IP atribuídos a interface de rede com o nome LAN-ETHERNET-ENP3S0
+        ---------------------------------------------------------------------------------
+            - nmcli -g ip4.address connection show LAN-ETHERNET-ENP3S0
+
+        Exibe endereços IP atribuídos a interface de rede com o nome WAN-ETHERNET-ENP2S0
+        ---------------------------------------------------------------------------------
+            - nmcli -g ip4.address,ip4.dns connection show WAN-ETHERNET-ENP2S0
+
+
+        Derruba uma conexão de rede com nome LAN-ETHERNET-ENP3S0
+        ---------------------------------------------------------
+            - nmcli connection down LAN-ETHERNET-ENP3S0
+
+        Levanta uma interface de rede com nome LAN-ETHERNET-ENP3S0
+        -----------------------------------------------------------
+            - nmcli connection up LAN-ETHERNET-ENP3S0
+
+
+        Recarrega as conexões de rede com o nome LAN-ETHERNET-ENP3S0
+        --------------------------------------------------------------
+            - sudo nmcli connection reload LAN-ETHERNET-ENP3S0
+
+        Carrega as conexões de rede com o nome LAN-ETHERNET-ENP3S0
+        -----------------------------------------------------------
+            - sudo nmcli connection load LAN-ETHERNET-ENP3S0
+            
+
+        Clonando uma conexão de rede com o nome LAN01-ETHERNET-ENP3S0
+        --------------------------------------------------------------
+            - sudo nmcli connection clone LAN-ETHERNET-ENP3S0 LAN01-ETHERNET-ENP3S0
+
+
+        Editando uma conexão de rede com o nome LAN01-ETHERNET-ENP3S0
+        --------------------------------------------------------------
+            - sudo nmcli connection delete LAN01-ETHERNET-ENP3S0
+            - print
+            - set ipv4.gateway 172.168.0.1
+            - save
+            - quit
+        ou 
+            - sudo nmcli connection delete LAN01-ETHERNET-ENP3S0
+            - print
+            - remove ipv4.gateway
+            - save
+            - quit
+
+
+        Deletando uma conexão de rede com o nome LAN01-ETHERNET-ENP3S0
+        ---------------------------------------------------------------
+            - nmcli connection delete LAN01-ETHERNET-ENP3S0
+
+
+        Configurando conexão de rede ethernet manualmente
+        --------------------------------------------------
+            Ex01.: nmcli connection add con-name LAN-ETHERNET-ENP3S0 ifname enp3s0 type ethernet ip4 172.168.0.1/24 ip4 172.168.0.2/24 ip4 172.168.0.3/24 ip4 172.168.0.4/24 ip4 172.168.0.5/24 gw4 172.168.0.1 ipv4.dns "8.8.8.8 8.8.4.4" 802-3-ethernet.mtu auto
+
+            Ex02.: nmcli connection add con-name LAN-ETHERNET-ENP3S0 ifname enp3s0 type ethernet ip4 172.168.0.1/24 ip4 172.168.0.2/24 ip4 172.168.0.3/24 ip4 172.168.0.4/24 ip4 172.168.0.5/24 802-3-ethernet.mtu auto
+
+
+        Configurando conexão de rede ethernet DHCP
+        -------------------------------------------
+            - nmcli connection add con-name WAN-ETHERNET-ENP2S0 type ethernet autoconnect true ifname enp2s0
+
+
+        Modificando uma conexão de rede
+        ---------------------------------
+            - Adicionando gateway padrão: nmcli connection modify LAN-ETHERNET-ENP3S0 +gw4 172.168.0.1
+
+            - Adicionar mais um servidor DNS: nmcli connection modify LAN-ETHERNET-ENP3S0 +ipv4.dns 4.4.2.2
+
+            - Remover mais um servidor DNS: nmcli connection modify LAN-ETHERNET-ENP3S0 -ipv4.dns 4.4.2.2
+
+            - Remover todos servidores DNS: nmcli connection modify LAN-ETHERNET-ENP3S0 -ipv4.dns "8.8.8.8 8.8.4.4"
+
+Fontes:
+-------
+    https://developer-old.gnome.org/NetworkManager/stable/nmcli.html
+    https://developer-old.gnome.org/NetworkManager/stable/nmcli-examples.html
